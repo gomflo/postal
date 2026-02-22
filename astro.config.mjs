@@ -6,7 +6,8 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://postal.github.io',
+  site: 'https://gomflo.dev',
+  base: '/postal',
   output: 'static',
   vite: {
     plugins: [tailwindcss()],
