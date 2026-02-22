@@ -2,12 +2,14 @@
 import "../styles/global.css";
 import { DetailView } from "../components/DetailView";
 import Breadcrumb from "../components/Breadcrumb.astro";
+import BreadcrumbSchema from "../components/BreadcrumbSchema.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import ThemeScript from "../components/ThemeScript.astro";
 import estados from "../data/estados.json";
 import { supabase } from "../lib/supabase";
 import type { PostalCodeRow } from "../lib/supabase";
 import { slugify, slugForAsentamiento } from "../lib/slug";
+import { SITE_BASE, truncate, META_DESC_MAX, TITLE_MAX } from "../lib/seo";
 const base = import.meta.env.BASE_URL;
 
 export async function getStaticPaths() {
@@ -72,14 +74,20 @@ export async function getStaticPaths() {
 }
 
 const props = Astro.props;
-const title =
+const rawTitle =
   props.kind === "estado"
     ? `${props.estado} — Códigos postales | Postali`
     : `${props.row.asentamiento} — ${props.row.codigo_postal} | Postali`;
-const description =
+const title = truncate(rawTitle, TITLE_MAX);
+const rawDescription =
   props.kind === "estado"
     ? `Códigos postales de ${props.estado}. Ciudades: ${props.ciudades.length}.`
     : `Código postal ${props.row.codigo_postal}: ${props.row.asentamiento}, ${props.row.municipio}, ${props.row.estado}.`;
+const description = truncate(rawDescription, META_DESC_MAX);
+const canonical =
+  props.kind === "estado"
+    ? `${SITE_BASE}/${Astro.params.clave}`
+    : `${SITE_BASE}/${Astro.params.clave}`;
 ---
 
 <html lang="es">
@@ -87,11 +95,37 @@ const description =
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <ThemeScript />
+    <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <link rel="icon" href={`${base}/favicon.ico`} />
     <meta name="description" content={description} />
     <title>{title}</title>
     <meta name="generator" content={Astro.generator} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="es_MX" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <BreadcrumbSchema
+      items={
+        props.kind === "estado"
+          ? [{ label: "Inicio", href: `${base}/` }, { label: props.estado }]
+          : [
+              { label: "Inicio", href: `${base}/` },
+              { label: props.row.estado, href: `${base}/${slugify(props.row.estado)}` },
+              ...(props.row.ciudad?.trim()
+                ? [
+                    { label: props.row.ciudad, href: `${base}/${slugify(props.row.estado)}/${slugify(props.row.ciudad)}` },
+                    { label: props.row.asentamiento },
+                  ]
+                : [{ label: props.row.asentamiento }]),
+            ]
+      }
+      currentPageUrl={canonical}
+    />
   </head>
   <body class="min-h-screen bg-background text-foreground">
     <a href="#main" class="skip-link">Ir al contenido</a>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /postal/
+
+Sitemap: https://gomflo.dev/postal/sitemap-index.xml

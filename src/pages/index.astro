@@ -5,7 +5,11 @@ import ThemeScript from "../components/ThemeScript.astro";
 import ThemeToggle from "../components/ThemeToggle.astro";
 import estados from "../data/estados.json";
 import { slugify } from "../lib/slug";
+import { SITE_BASE } from "../lib/seo";
 const base = import.meta.env.BASE_URL;
+const title = "Postali — Códigos postales de México";
+const description = "Buscar códigos postales de México por colonia.";
+const canonical = `${SITE_BASE}/`;
 ---
 
 <html lang="es">
@@ -13,11 +17,20 @@ const base = import.meta.env.BASE_URL;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <ThemeScript />
+    <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <link rel="icon" href={`${base}/favicon.ico`} />
-    <meta name="description" content="Buscar códigos postales de México por colonia." />
+    <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <title>Postali — Códigos postales de México</title>
+    <title>{title}</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="es_MX" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
   </head>
   <body class="min-h-screen bg-background text-foreground">
     <a href="#main" class="skip-link">Ir al contenido</a>
