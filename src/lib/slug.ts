@@ -12,7 +12,7 @@ export function slugify(text: string): string {
 }
 
 /**
- * Slug para la URL de detalle: asentamiento + código postal (ej. "san-jose-44100").
+ * Slug para la URL del asentamiento: asentamiento + código postal (ej. "san-jose-44100").
  */
 export function slugForAsentamiento(asentamiento: string, codigo_postal: string): string {
   return `${slugify(asentamiento)}-${codigo_postal}`;
