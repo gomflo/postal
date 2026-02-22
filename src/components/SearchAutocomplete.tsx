@@ -148,12 +148,12 @@ export function SearchAutocomplete() {
               role="search"
               onClick={() => inputRef.current?.focus()}
               className={cn(
-                "flex h-[52px] cursor-text items-center gap-3 rounded-xl border border-input bg-white px-4 shadow-xs transition-[border-color,box-shadow] dark:bg-white dark:border-gray-200",
+                "flex h-[52px] cursor-text items-center gap-3 rounded-xl border border-input bg-white px-4 shadow-xs transition-[border-color,box-shadow] dark:bg-input/30 dark:border-border",
                 "focus-within:border-ring focus-within:ring-ring/30 focus-within:ring-[3px]"
               )}
             >
               <Search
-                className="size-5 shrink-0 text-muted-foreground dark:text-gray-500"
+                className="size-5 shrink-0 text-muted-foreground"
                 aria-hidden
               />
               <input
@@ -176,7 +176,7 @@ export function SearchAutocomplete() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onFocus={() => showDropdown && setOpen(true)}
-                className="h-8 min-h-0 min-w-0 flex-1 border-0 bg-transparent p-0 text-base text-foreground outline-none placeholder:text-muted-foreground dark:text-gray-900 dark:placeholder:text-gray-500 md:text-sm [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
+                className="h-8 min-h-0 min-w-0 flex-1 border-0 bg-transparent p-0 text-base text-foreground outline-none placeholder:text-muted-foreground md:text-sm [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
               />
               {/* Espacio reservado para el botón de borrar evita que el contenedor cambie de altura al escribir */}
               <span className="flex size-8 shrink-0 items-center justify-center">
@@ -188,7 +188,7 @@ export function SearchAutocomplete() {
                       inputRef.current?.focus();
                     }}
                     aria-label="Borrar búsqueda"
-                    className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground dark:text-gray-600 dark:hover:bg-gray-100 dark:hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
                     <X className="size-5" aria-hidden />
                   </button>
