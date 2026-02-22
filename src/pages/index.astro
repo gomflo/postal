@@ -1,0 +1,66 @@
+---
+import "../styles/global.css";
+import { SearchAutocomplete } from "../components/SearchAutocomplete";
+import estados from "../data/estados.json";
+import { slugify } from "../lib/slug";
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="description" content="Buscar códigos postales de México por colonia." />
+    <meta name="generator" content={Astro.generator} />
+    <title>Postali — Códigos postales de México</title>
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+    <a href="#main" class="skip-link">Ir al contenido</a>
+    <main id="main" class="mx-auto max-w-2xl px-4 py-16 sm:py-24" tabindex="-1">
+      <header class="mb-10 text-center">
+        <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl text-pretty">
+          Postali
+        </h1>
+        <p class="mt-2 text-muted-foreground text-base">
+          Búsqueda de códigos postales de México
+        </p>
+      </header>
+      <div class="flex justify-center">
+        <SearchAutocomplete client:load />
+      </div>
+
+      <section
+        class="mt-14 sm:mt-16"
+        aria-labelledby="estados-heading"
+      >
+        <h2
+          id="estados-heading"
+          class="text-center text-sm font-medium uppercase tracking-wider text-muted-foreground text-pretty mb-6"
+        >
+          Explorar por estado
+        </h2>
+        <nav class="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3" aria-label="Estados de México">
+          {estados.map(({ estado }) => (
+            <a
+              href={`/estado/${slugify(estado)}`}
+              class="estados-link min-h-[3.5rem] flex items-center rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-card-foreground transition-colors duration-200 hover:bg-accent hover:text-accent-foreground hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background cursor-pointer touch-manipulation text-balance"
+            >
+              {estado}
+            </a>
+          ))}
+        </nav>
+      </section>
+    </main>
+    <footer class="px-4 py-6 text-right">
+      <a
+        href="https://gomflo.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-muted-foreground text-sm hover:text-foreground transition-colors"
+      >
+        by gomflo
+      </a>
+    </footer>
+  </body>
+</html>

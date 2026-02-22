@@ -1,0 +1,64 @@
+---
+import "../../styles/global.css";
+import { DetailView } from "../../components/DetailView";
+import { supabase } from "../../lib/supabase";
+import type { PostalCodeRow } from "../../lib/supabase";
+
+export async function getStaticPaths() {
+  const BATCH = 1000;
+  const allRows: PostalCodeRow[] = [];
+  let from = 0;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from("postal_codes")
+      .select("*")
+      .range(from, from + BATCH - 1);
+
+    if (error) throw error;
+    if (!data?.length) break;
+
+    allRows.push(...data);
+    if (data.length < BATCH) break;
+    from += BATCH;
+  }
+
+  return allRows.map((row) => ({
+    params: { id: row.id },
+    props: { row },
+  }));
+}
+
+const { row } = Astro.props;
+
+const title = `${row.asentamiento} — ${row.codigo_postal} | Postali`;
+const description = `Código postal ${row.codigo_postal}: ${row.asentamiento}, ${row.municipio}, ${row.estado}.`;
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+    <a href="#main" class="skip-link">Ir al contenido</a>
+    <main id="main" tabindex="-1">
+      <DetailView row={row} />
+    </main>
+    <footer class="px-4 py-6 text-right">
+      <a
+        href="https://gomflo.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-muted-foreground text-sm hover:text-foreground transition-colors"
+      >
+        by gomflo
+      </a>
+    </footer>
+  </body>
+</html>

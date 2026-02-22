@@ -1,0 +1,25 @@
+---
+// En modo estático no hay servidor para redirigir por query.
+// Esta página solo existe para enlaces antiguos /detalle?id=xxx.
+import "../styles/global.css";
+---
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Redirigiendo… | Postali</title>
+    <script is:inline>
+      const id = new URLSearchParams(window.location.search).get("id");
+      if (id) {
+        window.location.replace("/detalle/" + id);
+      } else {
+        window.location.replace("/");
+      }
+    </script>
+  </head>
+  <body class="min-h-screen bg-background text-foreground flex items-center justify-center">
+    <p class="text-muted-foreground">Redirigiendo…</p>
+  </body>
+</html>

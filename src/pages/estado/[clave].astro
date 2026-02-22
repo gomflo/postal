@@ -1,0 +1,97 @@
+---
+import "../../styles/global.css";
+import estados from "../../data/estados.json";
+import { supabase } from "../../lib/supabase";
+import { slugify } from "../../lib/slug";
+
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    estados.map(async ({ clave_estado, estado }) => {
+      const ciudadesSet = new Set<string>();
+      const batch = 1000;
+      let from = 0;
+
+      while (true) {
+        const { data, error } = await supabase
+          .from("postal_codes")
+          .select("ciudad")
+          .eq("clave_estado", clave_estado)
+          .order("ciudad", { nullsFirst: false })
+          .range(from, from + batch - 1);
+
+        if (error) throw error;
+        if (!data?.length) break;
+
+        for (const row of data) {
+          if (row.ciudad?.trim()) ciudadesSet.add(row.ciudad.trim());
+        }
+        if (data.length < batch) break;
+        from += batch;
+      }
+
+      const ciudades = [...ciudadesSet].sort((a, b) => a.localeCompare(b, "es"));
+      return {
+        params: { clave: slugify(estado) },
+        props: { estado, ciudades },
+      };
+    })
+  );
+  return paths;
+}
+
+const { estado, ciudades } = Astro.props;
+const title = `${estado} — Códigos postales | Postali`;
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="description" content={`Códigos postales de ${estado}. Ciudades: ${ciudades.length}.`} />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+    <a href="#main" class="skip-link">Ir al contenido</a>
+    <main id="main" class="mx-auto max-w-2xl px-4 py-16 sm:py-24" tabindex="-1">
+      <p class="mb-4">
+        <a
+          href="/"
+          class="text-muted-foreground text-sm hover:text-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
+        >
+          ← Inicio
+        </a>
+      </p>
+      <h1 class="text-2xl font-semibold tracking-tight text-pretty">{estado}</h1>
+      <p class="mt-2 text-muted-foreground text-base">
+        Códigos postales de {estado}. Usa la búsqueda en la página principal para encontrar colonias.
+      </p>
+
+      {ciudades.length > 0 ? (
+        <section class="mt-8" aria-labelledby="ciudades-heading">
+          <h2
+            id="ciudades-heading"
+            class="text-center text-sm font-medium uppercase tracking-wider text-muted-foreground text-pretty mb-4"
+          >
+            Ciudades ({ciudades.length})
+          </h2>
+          <ul class="grid grid-cols-1 gap-2 sm:grid-cols-2" role="list">
+            {ciudades.map((ciudad) => (
+              <li>
+                <a
+                  href={`/estado/${Astro.params.clave}/${slugify(ciudad)}`}
+                  class="block rounded-lg border border-border bg-card px-4 py-3 text-sm text-card-foreground transition-colors duration-200 hover:bg-accent hover:text-accent-foreground hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  {ciudad}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : (
+        <p class="mt-6 text-muted-foreground text-sm">No hay ciudades registradas para este estado.</p>
+      )}
+    </main>
+  </body>
+</html>

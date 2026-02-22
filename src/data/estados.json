@@ -1,0 +1,130 @@
+[
+  {
+    "estado": "Aguascalientes",
+    "clave_estado": "01"
+  },
+  {
+    "estado": "Baja California",
+    "clave_estado": "02"
+  },
+  {
+    "estado": "Baja California Sur",
+    "clave_estado": "03"
+  },
+  {
+    "estado": "Campeche",
+    "clave_estado": "04"
+  },
+  {
+    "estado": "Chiapas",
+    "clave_estado": "07"
+  },
+  {
+    "estado": "Chihuahua",
+    "clave_estado": "08"
+  },
+  {
+    "estado": "Ciudad de México",
+    "clave_estado": "09"
+  },
+  {
+    "estado": "Coahuila de Zaragoza",
+    "clave_estado": "05"
+  },
+  {
+    "estado": "Colima",
+    "clave_estado": "06"
+  },
+  {
+    "estado": "Durango",
+    "clave_estado": "10"
+  },
+  {
+    "estado": "Guanajuato",
+    "clave_estado": "11"
+  },
+  {
+    "estado": "Guerrero",
+    "clave_estado": "12"
+  },
+  {
+    "estado": "Hidalgo",
+    "clave_estado": "13"
+  },
+  {
+    "estado": "Jalisco",
+    "clave_estado": "14"
+  },
+  {
+    "estado": "Michoacán de Ocampo",
+    "clave_estado": "16"
+  },
+  {
+    "estado": "Morelos",
+    "clave_estado": "17"
+  },
+  {
+    "estado": "México",
+    "clave_estado": "15"
+  },
+  {
+    "estado": "Nayarit",
+    "clave_estado": "18"
+  },
+  {
+    "estado": "Nuevo León",
+    "clave_estado": "19"
+  },
+  {
+    "estado": "Oaxaca",
+    "clave_estado": "20"
+  },
+  {
+    "estado": "Puebla",
+    "clave_estado": "21"
+  },
+  {
+    "estado": "Querétaro",
+    "clave_estado": "22"
+  },
+  {
+    "estado": "Quintana Roo",
+    "clave_estado": "23"
+  },
+  {
+    "estado": "San Luis Potosí",
+    "clave_estado": "24"
+  },
+  {
+    "estado": "Sinaloa",
+    "clave_estado": "25"
+  },
+  {
+    "estado": "Sonora",
+    "clave_estado": "26"
+  },
+  {
+    "estado": "Tabasco",
+    "clave_estado": "27"
+  },
+  {
+    "estado": "Tamaulipas",
+    "clave_estado": "28"
+  },
+  {
+    "estado": "Tlaxcala",
+    "clave_estado": "29"
+  },
+  {
+    "estado": "Veracruz de Ignacio de la Llave",
+    "clave_estado": "30"
+  },
+  {
+    "estado": "Yucatán",
+    "clave_estado": "31"
+  },
+  {
+    "estado": "Zacatecas",
+    "clave_estado": "32"
+  }
+]
