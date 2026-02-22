@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SettlementMap } from "@/components/SettlementMap";
 
 type DetailViewProps = {
   /** Datos ya cargados en el servidor (SSR). Si se pasan, no se hace fetch en cliente. */
@@ -56,6 +57,12 @@ function DetailContent({ row }: { row: PostalCodeRow }) {
           </dl>
         </CardContent>
       </Card>
+      <SettlementMap
+        asentamiento={row.asentamiento}
+        ciudad={row.ciudad ?? ""}
+        estado={row.estado}
+        municipio={row.municipio}
+      />
       <p className="mt-6 text-center">
         <a
           href={baseSlash}
