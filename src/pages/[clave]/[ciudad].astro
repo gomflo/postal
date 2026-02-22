@@ -2,6 +2,7 @@
 import "../../styles/global.css";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
+import ThemeScript from "../../components/ThemeScript.astro";
 import estados from "../../data/estados.json";
 import { supabase } from "../../lib/supabase";
 import { slugify, slugForAsentamiento } from "../../lib/slug";
@@ -101,6 +102,7 @@ const description = `Colonias y asentamientos en ${ciudad}, ${estado}. ${asentam
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <ThemeScript />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <link rel="icon" href={`${base}/favicon.ico`} />
     <title>{title}</title>

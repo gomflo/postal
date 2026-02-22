@@ -1,5 +1,6 @@
 ---
 import { SearchAutocomplete } from "./SearchAutocomplete";
+import ThemeToggle from "./ThemeToggle.astro";
 const base = import.meta.env.BASE_URL;
 const homeUrl = base.endsWith("/") ? base : `${base}/`;
 ---
@@ -15,6 +16,8 @@ const homeUrl = base.endsWith("/") ? base : `${base}/`;
     <div class="min-w-0 flex-1 flex justify-center max-w-md mx-auto">
       <SearchAutocomplete client:load />
     </div>
-    <div class="w-18 shrink-0 sm:w-20" aria-hidden="true" />
+    <div class="flex w-18 shrink-0 items-center justify-end gap-1 sm:w-20">
+      <ThemeToggle />
+    </div>
   </div>
 </header>

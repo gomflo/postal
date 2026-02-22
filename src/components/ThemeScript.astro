@@ -1,0 +1,17 @@
+---
+// Script que se ejecuta antes del primer paint para evitar flash.
+// Respeta: 1) localStorage (preferencia del usuario), 2) prefers-color-scheme.
+---
+
+<script is:inline>
+  (function () {
+    const stored = typeof localStorage !== "undefined" ? localStorage.getItem("theme") : null;
+    const prefersDark = typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = stored === "dark" || (stored !== "light" && prefersDark);
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  })();
+</script>
