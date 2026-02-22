@@ -1,8 +1,10 @@
 ---
-import "../../../styles/global.css";
-import estados from "../../../data/estados.json";
-import { supabase } from "../../../lib/supabase";
-import { slugify } from "../../../lib/slug";
+import "../../styles/global.css";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import estados from "../../data/estados.json";
+import { supabase } from "../../lib/supabase";
+import { slugify, slugForAsentamiento } from "../../lib/slug";
 
 type AsentamientoRow = {
   id: string;
@@ -11,8 +13,11 @@ type AsentamientoRow = {
 };
 
 export async function getStaticPaths() {
+  const isDev = import.meta.env.DEV;
   const BATCH = 1000;
   const CONCURRENCY = 12;
+  const MAX_ESTADOS_DEV = 2;
+  const MAX_CIUDADES_DEV = 4;
 
   const allPaths: Array<{
     params: { clave: string; ciudad: string };
@@ -63,8 +68,11 @@ export async function getStaticPaths() {
     return rows;
   }
 
-  for (const { clave_estado, estado } of estados) {
-    const ciudades = await getCiudadesPorEstado(clave_estado);
+  const estadosToProcess = isDev ? estados.slice(0, MAX_ESTADOS_DEV) : estados;
+
+  for (const { clave_estado, estado } of estadosToProcess) {
+    const ciudadesRaw = await getCiudadesPorEstado(clave_estado);
+    const ciudades = isDev ? ciudadesRaw.slice(0, MAX_CIUDADES_DEV) : ciudadesRaw;
     for (let i = 0; i < ciudades.length; i += CONCURRENCY) {
       const chunk = ciudades.slice(i, i + CONCURRENCY);
       const chunkResults = await Promise.all(
@@ -84,7 +92,7 @@ export async function getStaticPaths() {
 }
 
 const { estado, ciudad, asentamientos } = Astro.props;
-
+const base = import.meta.env.BASE_URL;
 const title = `Colonias en ${ciudad}, ${estado} | Postali`;
 const description = `Colonias y asentamientos en ${ciudad}, ${estado}. ${asentamientos.length} códigos postales.`;
 ---
@@ -93,32 +101,23 @@ const description = `Colonias y asentamientos en ${ciudad}, ${estado}. ${asentam
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="icon" href={`${base}/favicon.ico`} />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
   </head>
   <body class="min-h-screen bg-background text-foreground">
     <a href="#main" class="skip-link">Ir al contenido</a>
+    <SiteHeader />
     <main id="main" class="mx-auto max-w-2xl px-4 py-16 sm:py-24" tabindex="-1">
-      <nav class="mb-4 flex flex-wrap gap-x-2 gap-y-1 text-sm text-muted-foreground" aria-label="Miga de pan">
-        <a
-          href="/"
-          class="hover:text-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
-        >
-          Inicio
-        </a>
-        <span aria-hidden="true">/</span>
-        <a
-          href={`/estado/${Astro.params.clave}`}
-          class="hover:text-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
-        >
-          {estado}
-        </a>
-        <span aria-hidden="true">/</span>
-        <span class="text-foreground">{ciudad}</span>
-      </nav>
+      <Breadcrumb
+        items={[
+          { label: "Inicio", href: `${base}/` },
+          { label: estado, href: `${base}/${Astro.params.clave}` },
+          { label: ciudad },
+        ]}
+      />
 
       <h1 class="text-2xl font-semibold tracking-tight text-pretty">
         Colonias y asentamientos en {ciudad}, {estado}
@@ -135,15 +134,14 @@ const description = `Colonias y asentamientos en ${ciudad}, ${estado}. ${asentam
           >
             Listado de colonias y asentamientos
           </h2>
-          <ul class="grid grid-cols-1 gap-2 sm:grid-cols-2" role="list">
+          <ul class="grid grid-cols-2 gap-2 sm:gap-3" role="list">
             {asentamientos.map((row) => (
               <li>
                 <a
-                  href={`/detalle/${row.id}`}
-                  class="block rounded-lg border border-border bg-card px-4 py-3 text-sm text-card-foreground transition-colors duration-200 hover:bg-accent hover:text-accent-foreground hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  href={`${base}/${slugForAsentamiento(row.asentamiento, row.codigo_postal)}`}
+                  class="h-16 flex items-center rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-card-foreground transition-colors duration-200 hover:bg-accent hover:text-accent-foreground hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background cursor-pointer touch-manipulation text-balance"
                 >
-                  <span class="font-medium">{row.asentamiento}</span>
-                  <span class="ml-2 text-muted-foreground">({row.codigo_postal})</span>
+                  {row.asentamiento}
                 </a>
               </li>
             ))}

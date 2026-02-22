@@ -1,0 +1,27 @@
+---
+/**
+ * Breadcrumb reutilizable para navegación jerárquica.
+ * Cada item puede ser enlace (href) o página actual (sin href).
+ * Accesible: nav con aria-label, separadores aria-hidden.
+ */
+type BreadcrumbItem = { label: string; href?: string };
+const { items } = Astro.props as { items: BreadcrumbItem[] };
+---
+
+<nav class="mb-4 flex flex-wrap gap-x-2 gap-y-1 text-sm text-muted-foreground" aria-label="Miga de pan">
+  {items.map((item, i) => (
+    <>
+      {i > 0 ? <span aria-hidden="true">/</span> : null}
+      {item.href ? (
+        <a
+          href={item.href}
+          class="hover:text-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
+        >
+          {item.label}
+        </a>
+      ) : (
+        <span class="text-foreground">{item.label}</span>
+      )}
+    </>
+  ))}
+</nav>

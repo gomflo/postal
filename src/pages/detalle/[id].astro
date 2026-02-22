@@ -1,8 +1,9 @@
 ---
+// Redirige enlaces antiguos /postal/detalle/{id} a la URL canónica /postal/asentamiento-codigopostal
 import "../../styles/global.css";
-import { DetailView } from "../../components/DetailView";
 import { supabase } from "../../lib/supabase";
 import type { PostalCodeRow } from "../../lib/supabase";
+import { slugForAsentamiento } from "../../lib/slug";
 
 export async function getStaticPaths() {
   const BATCH = 1000;
@@ -25,40 +26,28 @@ export async function getStaticPaths() {
 
   return allRows.map((row) => ({
     params: { id: row.id },
-    props: { row },
+    props: { canonicalSlug: slugForAsentamiento(row.asentamiento, row.codigo_postal) },
   }));
 }
 
-const { row } = Astro.props;
-
-const title = `${row.asentamiento} — ${row.codigo_postal} | Postali`;
-const description = `Código postal ${row.codigo_postal}: ${row.asentamiento}, ${row.municipio}, ${row.estado}.`;
+const { canonicalSlug } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const canonicalUrl = `${base.endsWith("/") ? base : base + "/"}${canonicalSlug}`;
 ---
 
 <html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0;url=${canonicalUrl}`} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <title>Redirigiendo… | Postali</title>
   </head>
-  <body class="min-h-screen bg-background text-foreground">
-    <a href="#main" class="skip-link">Ir al contenido</a>
-    <main id="main" tabindex="-1">
-      <DetailView row={row} />
-    </main>
-    <footer class="px-4 py-6 text-right">
-      <a
-        href="https://gomflo.dev"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-muted-foreground text-sm hover:text-foreground transition-colors"
-      >
-        by gomflo
-      </a>
-    </footer>
+  <body class="min-h-screen bg-background text-foreground flex items-center justify-center">
+    <p class="text-muted-foreground">
+      Redirigiendo… <a href={canonicalUrl} class="text-foreground underline">Ir al detalle</a>
+    </p>
   </body>
 </html>

@@ -3,8 +3,11 @@
 import * as React from "react";
 import { Search, MapPin, Loader2, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+
+const base = typeof import.meta.env !== "undefined" ? (import.meta.env.BASE_URL ?? "") : "";
+const baseSlash = base.endsWith("/") ? base : `${base}/`;
 import type { PostalCodeRow } from "@/lib/supabase";
-import { Input } from "@/components/ui/input";
+import { slugForAsentamiento } from "@/lib/slug";
 import {
   Popover,
   PopoverAnchor,
@@ -129,7 +132,7 @@ export function SearchAutocomplete() {
       setSelectedIndex((i) => (i > 0 ? i - 1 : 0));
     } else if (e.key === "Enter" && results[selectedIndex]) {
       e.preventDefault();
-      window.location.href = `/detalle/${results[selectedIndex].id}`;
+      window.location.href = `${baseSlash}${slugForAsentamiento(results[selectedIndex].asentamiento, results[selectedIndex].codigo_postal)}`;
     }
   };
 
@@ -142,16 +145,18 @@ export function SearchAutocomplete() {
               Buscar por colonia o código postal
             </label>
             <div
+              role="search"
+              onClick={() => inputRef.current?.focus()}
               className={cn(
-                "flex h-[52px] items-center gap-3 rounded-xl border border-input bg-background px-4 shadow-sm transition-[border-color,box-shadow]",
+                "flex h-[52px] cursor-text items-center gap-3 rounded-xl border border-input bg-white px-4 shadow-xs transition-[border-color,box-shadow] dark:bg-white dark:border-gray-200",
                 "focus-within:border-ring focus-within:ring-ring/30 focus-within:ring-[3px]"
               )}
             >
               <Search
-                className="size-5 shrink-0 text-muted-foreground"
+                className="size-5 shrink-0 text-muted-foreground dark:text-gray-500"
                 aria-hidden
               />
-              <Input
+              <input
                 ref={inputRef}
                 id="search-colonia"
                 type="search"
@@ -166,12 +171,12 @@ export function SearchAutocomplete() {
                     ? `${listId}-item-${selectedIndex}`
                     : undefined
                 }
-                placeholder="Colonia o código postal (ej. Del Valle, 03100)"
+                placeholder="Colonia o código postal (ej. Del Valle, 03100…)"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onFocus={() => showDropdown && setOpen(true)}
-                className="h-8 min-h-0 flex-1 border-0 bg-transparent p-0 text-base shadow-none placeholder:text-muted-foreground focus-visible:ring-0 md:text-sm [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
+                className="h-8 min-h-0 min-w-0 flex-1 border-0 bg-transparent p-0 text-base text-foreground outline-none placeholder:text-muted-foreground dark:text-gray-900 dark:placeholder:text-gray-500 md:text-sm [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
               />
               {/* Espacio reservado para el botón de borrar evita que el contenedor cambie de altura al escribir */}
               <span className="flex size-8 shrink-0 items-center justify-center">
@@ -183,7 +188,7 @@ export function SearchAutocomplete() {
                       inputRef.current?.focus();
                     }}
                     aria-label="Borrar búsqueda"
-                    className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground dark:text-gray-600 dark:hover:bg-gray-100 dark:hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
                     <X className="size-5" aria-hidden />
                   </button>
@@ -238,7 +243,7 @@ export function SearchAutocomplete() {
                   id={`${listId}-item-${i}`}
                   role="option"
                   aria-selected={i === selectedIndex}
-                  href={`/detalle/${row.id}`}
+                  href={`${baseSlash}${slugForAsentamiento(row.asentamiento, row.codigo_postal)}`}
                   className={cn(
                     "mx-2 flex cursor-pointer gap-3 rounded-lg px-3 py-3 text-left transition-colors",
                     "hover:bg-accent hover:text-accent-foreground",

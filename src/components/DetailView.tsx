@@ -2,6 +2,9 @@
 
 import * as React from "react";
 import { supabase } from "@/lib/supabase";
+
+const base = typeof import.meta.env !== "undefined" ? (import.meta.env.BASE_URL ?? "") : "";
+const baseSlash = base.endsWith("/") ? base : `${base}/`;
 import type { PostalCodeRow } from "@/lib/supabase";
 import {
   Card,
@@ -55,7 +58,7 @@ function DetailContent({ row }: { row: PostalCodeRow }) {
       </Card>
       <p className="mt-6 text-center">
         <a
-          href="/"
+          href={baseSlash}
           className="text-muted-foreground text-sm underline underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
         >
           Buscar otro código postal
@@ -112,7 +115,7 @@ export function DetailView({ row: serverRow, initialId }: DetailViewProps) {
           Código postal no especificado.
         </p>
         <a
-          href="/"
+          href={baseSlash}
           className="text-primary underline underline-offset-4 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
         >
           Volver al inicio
@@ -146,7 +149,7 @@ export function DetailView({ row: serverRow, initialId }: DetailViewProps) {
           {error ?? "No se encontró el registro."}
         </p>
         <a
-          href="/"
+          href={baseSlash}
           className="text-primary underline underline-offset-4 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
         >
           Volver al inicio

@@ -1,0 +1,20 @@
+---
+import { SearchAutocomplete } from "./SearchAutocomplete";
+const base = import.meta.env.BASE_URL;
+const homeUrl = base.endsWith("/") ? base : `${base}/`;
+---
+
+<header class="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
+  <div class="mx-auto flex max-w-4xl items-center gap-4 px-4 py-3 sm:px-6">
+    <a
+      href={homeUrl}
+      class="shrink-0 text-xl font-semibold tracking-tight text-foreground no-underline hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
+    >
+      Postali
+    </a>
+    <div class="min-w-0 flex-1 flex justify-center max-w-md mx-auto">
+      <SearchAutocomplete client:load />
+    </div>
+    <div class="w-18 shrink-0 sm:w-20" aria-hidden="true" />
+  </div>
+</header>
