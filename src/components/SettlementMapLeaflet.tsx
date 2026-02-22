@@ -4,7 +4,8 @@ import * as React from "react";
 import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-const OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+const TILE_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
+const TILE_URL = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
 
 type GeoFeature = {
   type: "Feature";
@@ -61,11 +62,11 @@ export function SettlementMapLeaflet({
   );
 
   const style = React.useCallback(() => ({
-    weight: 2,
-    opacity: 0.9,
-    color: "#2563eb",
-    fillColor: "#2563eb",
-    fillOpacity: 0.2,
+    weight: 1.5,
+    opacity: 0.6,
+    color: "#374151",
+    fillColor: "#6b7280",
+    fillOpacity: 0.08,
   }), []);
 
   return (
@@ -76,10 +77,7 @@ export function SettlementMapLeaflet({
       aria-label={`Mapa del asentamiento ${asentamientoNombre}`}
       className="z-0"
     >
-      <TileLayer
-        attribution={OSM_ATTR}
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <TileLayer attribution={TILE_ATTR} url={TILE_URL} />
       <FitBounds bounds={bounds} />
       <GeoJSON data={boundaryGeojson} style={style} />
     </MapContainer>
